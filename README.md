@@ -49,13 +49,13 @@ pip install netmiko
 
 2、恢复最小化的配置
 
-```markdown
+```text
 system
-system-ip 1.1.1.1
-site-id 1
-sp-org "China Unicom"
-org "China Unicom"
-vbond x.x.x.x
+ system-ip 1.1.1.1
+ site-id 1
+ sp-org "China Unicom"
+ org "China Unicom"
+ vbond x.x.x.x
 ```
 
 3、将 vManage 设置为多租户模式（如果原来 vManage 是多租户模式的话）
