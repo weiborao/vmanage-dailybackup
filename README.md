@@ -14,14 +14,14 @@ Dailybackup 脚本通过 Linux 的 Crontab 每日任务自动执行，将 vManag
 （1）设置 FTP 服务器，设置用户、密码，以及上传权限，将 FTP 的根目录设置为可上传。
 
 ```shell
-	vsftp.conf 配置参数如下：
-	local_enable=YES
-	write_enable=YES
-	chroot_local_user=YES
-	ssl_enable=NO
-	user_sub_token=$USER
-	local_root=/home/$USER/ftp/upload
-	allow_writeable_chroot=YES
+vsftp.conf 配置参数如下：
+local_enable=YES
+write_enable=YES
+chroot_local_user=YES
+ssl_enable=NO
+user_sub_token=$USER
+local_root=/home/$USER/ftp/upload
+allow_writeable_chroot=YES
 ```
 
 （2）安装 Python3.7 或以上版本，并在/home/ubuntu/vmanage/ 目录中添加 venv 的虚拟环境。
