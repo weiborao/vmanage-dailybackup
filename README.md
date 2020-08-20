@@ -1,4 +1,4 @@
-#Dailybackup 脚本的使用
+# Dailybackup 脚本的使用
 
 Dailybackup 脚本通过 Linux 的 Crontab 每日任务自动执行，将 vManage 的配置数据库文件备份，并上传至 FTP 服务器。
 
