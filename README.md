@@ -38,7 +38,7 @@ pip install netmiko
 计划每日 23:00 执行备份任务。
 
 ```shell
-00 23 \* \* \* cd /home/ubuntu/vmanage && ./job.sh
+00 23 * * * cd /home/ubuntu/vmanage && ./job.sh
 ```
 
 （4）脚本每天执行一次，vManage 会备份当天的数据，并将 7 天前的数据用 0 字节文件替代。
