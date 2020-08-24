@@ -6,7 +6,7 @@ Dailybackup 脚本通过 Linux 的 Crontab 每日任务自动执行，将 vManag
 
 1. job.sh Shell 脚本，启动 Python 虚拟环境，并执行 Python 脚本
 1. dailaybackup.py Python 脚本，通过调用 netmiko 模块实现 SSH 登录 vMange，并发送数据备份命令和备份文件 FTP 上传的命令。
-1. vmanage 和 vmanage.pub 是一对 RSA 秘钥对，将 vmanage.pub 添加至 vManage 的/home/admin/authorized_keys 中，SSH 登录使用私钥 vmanage 文件。
+1. vmanage 和 vmanage.pub 是一对 RSA 秘钥对，将 vmanage.pub 添加至 vManage 的/home/admin/.ssh/authorized_keys 中，SSH 登录使用私钥 vmanage 文件。
 1. backupjob.log 是备份任务的日志文件，记录任务的开始和结束时间，以及运行的情况。
 
 ## 脚本的使用方法：
