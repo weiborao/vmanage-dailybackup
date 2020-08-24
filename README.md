@@ -28,7 +28,7 @@ allow_writeable_chroot=YES
 
 ```shell
 python3.8 -m venv venv
-source venv/bin/acticate
+source venv/bin/activate
 pip install netmiko
 ```
 
