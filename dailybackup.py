@@ -8,6 +8,7 @@ import sys
 
 keyfile = 'vmanage'
 logfile = 'backupjob.log'
+backup_path = './backupdata'
 
 login_info = {
     'device_type': 'linux',
@@ -16,10 +17,6 @@ login_info = {
     'use_keys': True,
     'key_file': keyfile
 }
-
-ftp_user = 'sammy'
-ftp_password = '123456'
-ftp_server = '10.75.58.5'
 
 jobstart = str(DT.datetime.now())
 
@@ -31,10 +28,12 @@ backupreturn = net_connect.send_command(
 
 # print(backupreturn)
 
-uploadfile = net_connect.send_command(
-    'request upload ftp://' + ftp_user + ':' + ftp_password +
-    '@' + ftp_server + '/upload/confdb_backup' + date
-    + '.tar.gz' + ' confdb_backup' + date + '.tar.gz')
+runcmd1 = 'scp -i ' + keyfile + ' ' + login_info['username'] + '@' + \
+    login_info['host'] + ':' + '/home/admin/confdb_backup' + \
+    date + '.tar.gz ' + backup_path
+
+ret1 = subprocess.run(runcmd1, shell=True, stdout=subprocess.PIPE,
+                      stderr=subprocess.PIPE, encoding="utf-8", timeout=1)
 
 # print(uploadfile)
 
@@ -45,22 +44,23 @@ week_ago = DT.datetime.today() - DT.timedelta(days=7)
 week_ago = str(week_ago.date())
 zerofile = "/tmp/confdb_backup" + week_ago + ".tar.gz"
 
-runcmd = 'touch ' + zerofile + ' && ' + 'scp -i vmanage ' + zerofile + \
+runcmd2 = 'touch ' + zerofile + ' && ' + 'scp -i vmanage ' + zerofile + \
     ' admin@' + login_info['host'] + \
     ':/home/admin/' + ' && ' + 'rm ' + zerofile
 
-ret = subprocess.run(runcmd, shell=True, stdout=subprocess.PIPE,
-                     stderr=subprocess.PIPE, encoding="utf-8", timeout=1)
+ret2 = subprocess.run(runcmd2, shell=True, stdout=subprocess.PIPE,
+                      stderr=subprocess.PIPE, encoding="utf-8", timeout=1)
 
 # print(ret)
 
-ret = str(ret)
+ret1 = str(ret1)
+ret2 = str(ret2)
 
 jobend = str(DT.datetime.now())
 
 logtitle = '\n\n' + '='*15 + 'Day of ' + date + '='*15 + '\n'
 logdata = logtitle + jobstart + ' Job started...\n' + backupreturn + \
-    uploadfile + '\n' + ret + '\n' + jobend + ' Job ended...\n'
+    '\n' + ret1 + '\n' + ret2 + '\n' + jobend + ' Job ended...\n'
 
 with open(logfile, 'a') as fobj:
     fobj.write(logdata)

@@ -5,43 +5,31 @@ Dailybackup 脚本通过 Linux 的 Crontab 每日任务自动执行，将 vManag
 ## 脚本由以下部分组成：
 
 1. job.sh Shell 脚本，启动 Python 虚拟环境，并执行 Python 脚本
-1. dailaybackup.py Python 脚本，通过调用 netmiko 模块实现 SSH 登录 vMange，并发送数据备份命令和备份文件 FTP 上传的命令。
-1. vmanage 和 vmanage.pub 是一对 RSA 秘钥对，将 vmanage.pub 添加至 vManage 的/home/admin/.ssh/authorized_keys 中，SSH 登录使用私钥 vmanage 文件。
-1. backupjob.log 是备份任务的日志文件，记录任务的开始和结束时间，以及运行的情况。
+2. dailaybackup.py Python 脚本，通过调用 netmiko 模块实现 SSH 登录 vMange，并发送数据备份命令，运行 scp 将文件拷贝至备份服务器。
+3. vmanage 和 vmanage.pub 是一对 RSA 秘钥对，将 vmanage.pub 添加至 vManage 的/home/admin/.ssh/authorized_keys 中，SSH 登录使用私钥 vmanage 文件。
+4. backupjob.log 是备份任务的日志文件，记录任务的开始和结束时间，以及运行的情况。
 
 ## 脚本的使用方法：
 
-（1）设置 FTP 服务器，设置用户、密码，以及上传权限，将 FTP 的根目录设置为可上传。
-
-```shell
-vsftp.conf 配置参数如下：
-local_enable=YES
-write_enable=YES
-chroot_local_user=YES
-ssl_enable=NO
-user_sub_token=$USER
-local_root=/home/$USER/ftp/upload
-allow_writeable_chroot=YES
-```
-
-（2）安装 Python3.7 或以上版本，并在/home/ubuntu/vmanage/ 目录中添加 venv 的虚拟环境。
+（1）安装 Python3.7 或以上版本，并在/home/ubuntu/vmanage/ 目录中添加 venv 的虚拟环境。
 
 ```shell
 python3.8 -m venv venv
 source venv/bin/activate
 pip install netmiko
+mkdir backupdata
 ```
 
 将 Dailybackup 的所有脚本放在该目录，注意检查 job.sh 是否有可执行权限。
 
-（3）添加 Linux 的计划任务，通过 crontab -e 编辑
+（2）添加 Linux 的计划任务，通过 crontab -e 编辑
 计划每日 23:00 执行备份任务。
 
 ```shell
 00 23 * * * cd /home/ubuntu/vmanage && ./job.sh
 ```
 
-（4）脚本每天执行一次，vManage 会备份当天的数据，并将 7 天前的数据用 0 字节文件替代。
+（3）脚本每天执行一次，vManage 会备份当天的数据，并将 7 天前的数据用 0 字节文件替代。
 
 ## vMange 恢复过程
 
