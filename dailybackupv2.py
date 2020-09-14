@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from netmiko import ConnectHandler
 import datetime as DT
 import subprocess
 import sys
+
+from netmiko import ConnectHandler
 
 keyfile = 'vmanage'
 logfile = 'backupjob.log'
@@ -16,7 +17,7 @@ login_info = {
     'username': 'admin',
     'use_keys': True,
     'key_file': keyfile,
-    }
+}
 
 date = str(DT.date.today())
 week_ago = DT.datetime.today() - DT.timedelta(days=7)
@@ -38,7 +39,8 @@ class SSHjob:
 
     def run_backup(self):
         backup_cmd = \
-            'request nms configuration-db backup path /home/admin/confdb_backup' \
+            'request nms configuration-db backup path \
+                /home/admin/confdb_backup' \
             + date
         self.backup_ret = self.net_connect.send_command(backup_cmd)
 
@@ -54,7 +56,7 @@ class SSHjob:
             stderr=subprocess.PIPE,
             encoding='utf-8',
             timeout=1,
-            ))
+        ))
 
     def copy_zero_file(self):
         runcmd = 'touch ' + zerofile + ' && ' + 'scp -i vmanage ' \
@@ -67,7 +69,7 @@ class SSHjob:
             stderr=subprocess.PIPE,
             encoding='utf-8',
             timeout=1,
-            ))
+        ))
 
     def disconnect(self):
         self.net_connect.disconnect()
@@ -95,5 +97,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-			
