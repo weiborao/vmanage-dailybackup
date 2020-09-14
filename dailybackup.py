@@ -1,68 +1,132 @@
-#!/venv/bin/ python3
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-from netmiko import ConnectHandler
 import datetime as DT
 import subprocess
 import sys
 
+from netmiko import ConnectHandler
 
-keyfile = 'vmanage'
-logfile = 'backupjob.log'
-backup_path = './backupdata'
+keyfile = "vmanage"
+logfile = "backupjob.log"
+backup_path = "./backupdata"
 
 login_info = {
-    'device_type': 'linux',
-    'host':   '10.75.58.50',
-    'username': 'admin',
-    'use_keys': True,
-    'key_file': keyfile
+    "device_type": "linux",
+    "host": "10.75.58.50",
+    "username": "admin",
+    "use_keys": True,
+    "key_file": keyfile,
 }
 
-jobstart = str(DT.datetime.now())
-
-net_connect = ConnectHandler(**login_info)
-
 date = str(DT.date.today())
-backupreturn = net_connect.send_command(
-    'request nms configuration-db backup path /home/admin/confdb_backup' + date)
-
-# print(backupreturn)
-
-runcmd1 = 'scp -i ' + keyfile + ' ' + login_info['username'] + '@' + \
-    login_info['host'] + ':' + '/home/admin/confdb_backup' + \
-    date + '.tar.gz ' + backup_path
-
-ret1 = subprocess.run(runcmd1, shell=True, stdout=subprocess.PIPE,
-                      stderr=subprocess.PIPE, encoding="utf-8", timeout=1)
-
-# print(uploadfile)
-
-net_connect.disconnect()
-
-# zero size the backup file one week ago.
 week_ago = DT.datetime.today() - DT.timedelta(days=7)
 week_ago = str(week_ago.date())
 zerofile = "/tmp/confdb_backup" + week_ago + ".tar.gz"
+logtitle = "=" * 15 + "Day of " + date + "=" * 15 + "\n"
 
-runcmd2 = 'touch ' + zerofile + ' && ' + 'scp -i vmanage ' + zerofile + \
-    ' admin@' + login_info['host'] + \
-    ':/home/admin/' + ' && ' + 'rm ' + zerofile
 
-ret2 = subprocess.run(runcmd2, shell=True, stdout=subprocess.PIPE,
-                      stderr=subprocess.PIPE, encoding="utf-8", timeout=1)
+class SSHjob:
+    def __init__(self):
+        self.net_connect = None
+        self.backup_ret = None
+        self.ret1 = None
+        self.ret2 = None
 
-# print(ret)
+    def connect(self):
+        self.net_connect = ConnectHandler(**login_info)
 
-ret1 = str(ret1)
-ret2 = str(ret2)
+    def run_backup(self):
+        backup_cmd = (
+            "request nms configuration-db backup path \
+                 /home/admin/confdb_backup"
+            + date
+        )
+        self.backup_ret = self.net_connect.send_command(backup_cmd)
 
-jobend = str(DT.datetime.now())
+    def copy_backup_file(self):
+        runcmd = (
+            "scp -i "
+            + keyfile
+            + " "
+            + login_info["username"]
+            + "@"
+            + login_info["host"]
+            + ":"
+            + "/home/admin/confdb_backup"
+            + date
+            + ".tar.gz "
+            + backup_path
+        )
+        self.ret1 = str(
+            subprocess.run(
+                runcmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding="utf-8",
+                timeout=1,
+            )
+        )
 
-logtitle = '\n\n' + '='*15 + 'Day of ' + date + '='*15 + '\n'
-logdata = logtitle + jobstart + ' Job started...\n' + backupreturn + \
-    '\n' + ret1 + '\n' + ret2 + '\n' + jobend + ' Job ended...\n'
+    def copy_zero_file(self):
+        runcmd = (
+            "touch "
+            + zerofile
+            + " && "
+            + "scp -i vmanage "
+            + zerofile
+            + " admin@"
+            + login_info["host"]
+            + ":/home/admin/"
+            + " && "
+            + "rm "
+            + zerofile
+        )
+        self.ret2 = str(
+            subprocess.run(
+                runcmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding="utf-8",
+                timeout=1,
+            )
+        )
 
-with open(logfile, 'a') as fobj:
-    fobj.write(logdata)
+    def disconnect(self):
+        self.net_connect.disconnect()
 
-sys.exit(0)
+
+def main():
+    jobstart = str(DT.datetime.now())
+    backup_job = SSHjob()
+    backup_job.connect()
+    backup_job.run_backup()
+    backup_job.copy_backup_file()
+    backup_job.copy_zero_file()
+    backup_job.disconnect()
+    jobend = str(DT.datetime.now())
+
+    logdata = (
+        logtitle
+        + jobstart
+        + " Job started...\n"
+        + backup_job.backup_ret
+        + "\n"
+        + backup_job.ret1
+        + "\n"
+        + backup_job.ret2
+        + "\n"
+        + jobend
+        + " Job ended...\n"
+    )
+
+    with open(logfile, "a") as fobj:
+        fobj.write(logdata)
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
