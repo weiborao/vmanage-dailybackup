@@ -35,19 +35,31 @@ source venv/bin/activate
 pip install netmiko
 ```
 
-Before executing the script, execute the SSH login command on the Linux server at least once. 
+Before executing the script, execute the SSH login command on the Linux server at least once, and add the **vmanage.pub** to **/home/admin/.ssh/authorized_keys**
 
-After execution, the fingerprint information of vManage's SSH Key is stored in ~/.ssh/known_hosts to avoid asking whether to continue the connection during script execution. In the following example, the vManage server's IP address is 10.75.58.50.
+In the following example, the vManage server's IP address is 10.75.58.50.
 
 ```shell
-ssh -i vmanage admin@10.75.58.50
+scp vmanage.pub admin@10.75.58.50:/home/admin/.ssh/authorized_keys
+
 The authenticity of host '10.75.58.50 (10.75.58.50)' can't be established.
 ECDSA key fingerprint is SHA256:rDdvfeJ0mJquMu0KiAtAkH++n3ZBS9sYEr+TRMQBNOI.
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added '10.75.58.50' (ECDSA) to the list of known hosts.
 viptela 20.1.1
 
-Last login: Sat Oct 10 09:26:33 2020 from 10.75.58.5
+admin@10.75.58.50's password:
+vmanage.pub                                  100%  559   818.7KB/s   00:00
+```
+**Note**: *If you have other hosts that are already in /home/admin/.ssh/authorized_keys, you can append vmanage.pub to the authorized_keys through vi editor.*
+
+After execution, the fingerprint information of vManage's SSH Key is stored in ~/.ssh/known_hosts to avoid asking whether to continue the connection during script execution. 
+
+```shell
+ssh -i vmanage admin@10.75.58.50
+viptela 20.1.1
+
+Last login: Sat Oct 10 10:37:17 2020 from 10.75.58.5
 Welcome to Viptela CLI
 admin connected from 10.75.58.5 using ssh on vmanage
 vmanage#
@@ -59,7 +71,6 @@ Pay attention to check whether **job.sh** has executable permissions.
 ~/vmanage$ ll job.sh
 -rwxrwxr-x 1 ubuntu ubuntu 145 Oct 10 10:19 job.sh*
 ```
-
 
 (3) Add a scheduled task for Linux, and edit it through **crontab -e** to schedule a backup task at 23:00 every day.
 
