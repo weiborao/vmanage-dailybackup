@@ -10,32 +10,56 @@ This Dailybackup script automatically executes Python scripts through Linux Cron
 1. **./backupdata** is the directory for storing backup data.
 
 ## How to use the script:
-(1) Install Python3.7 or above, and add the venv virtual environment in the /home/ubuntu/vmanage/ directory, or other directory.
+
+(1) Git clone the code to your home directory, such as **/home/ubuntu/**
+
+```shell
+cd /home/ubuntu/
+git clone https://github.com/weiborao/vmanage-dailybackup.git vmanage
+```
+The file vmanage is the private key, permissions 0664 for 'vmanage' are too open, you can change it to 0600.
+
+```shell
+chmode 600 vmanage
+```
+
+(2) Install Python3.7 or above, and add the venv virtual environment in the /home/ubuntu/vmanage/ directory, or other directory.
 
 ```shell
 python3.8 -m venv venv
 source venv/bin/activate
 pip install netmiko
-mkdir backupdata
 ```
 
-Before executing the script, execute the SSH login command on the Linux server at least once. After execution, the fingerprint information of vManage's SSH Key is stored in ~/.ssh/known_hosts to avoid asking whether to continue the connection during script execution.
+Before executing the script, execute the SSH login command on the Linux server at least once. After execution, the fingerprint information of vManage's SSH Key is stored in ~/.ssh/known_hosts to avoid asking whether to continue the connection during script execution. In the following example, the vManage server's IP address is 10.75.58.50.
 
 ```shell
 ssh -i vmanage admin@10.75.58.50
+The authenticity of host '10.75.58.50 (10.75.58.50)' can't be established.
+ECDSA key fingerprint is SHA256:rDdvfeJ0mJquMu0KiAtAkH++n3ZBS9sYEr+TRMQBNOI.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.75.58.50' (ECDSA) to the list of known hosts.
+viptela 20.1.1
+
+Last login: Sat Oct 10 09:26:33 2020 from 10.75.58.5
+Welcome to Viptela CLI
+admin connected from 10.75.58.5 using ssh on vmanage
+vmanage#
 ```
 
 Put all the dailybackup scripts in this directory, and pay attention to check whether **job.sh** has executable permissions.
 
-(2) Add a scheduled task for Linux, and edit it through **crontab -e** to schedule a backup task at 23:00 every day.
+
+
+(3) Add a scheduled task for Linux, and edit it through **crontab -e** to schedule a backup task at 23:00 every day.
 
 ```shell
 00 23 * * * cd /home/ubuntu/vmanage && ./job.sh
 ```
 
-(3) The script is to executed once a day, vManage backs up the data of the day and replace the data 7 days ago with a 0-byte file.
+(4) The script is to executed once a day, vManage backs up the data of the day and replace the data 7 days ago with a 0-byte file.
 
-(4) Copy **cleanzerofile.sh** to the /home/admin/ directory of vManage server, log in to vManage regularly for execution, and it will delete 0-byte files.
+(5) Copy **cleanzerofile.sh** to the /home/admin/ directory of vManage server, log in to vManage regularly for execution, and it will delete 0-byte files.
 
 ## vMange recovery process
 (1) Simply configure vManage to make its Web Portal accessible.
