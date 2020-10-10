@@ -5,7 +5,7 @@ This Dailybackup script automatically executes Python scripts through Linux Cron
 ## Components of the scripts
 1. **job.sh** A shell script, which starts the Python virtual environment, and execute the Python script
 1. **dailaybackup.py** The Python script implements SSH login to vManage by calling the netmiko module, sends a data backup command, and runs scp to copy the file to the ./backupdata directory of the backup server.
-1. **vmanage and vmanage.pub** are a pair of RSA key pairs. Add vmanage.pub to vManage server's /home/admin/.ssh/authorized_keys. SSH login uses the private key vmanage for authentication in a passless way.
+1. **vmanage and vmanage.pub** are a pair of RSA key pairs. Add vmanage.pub to vManage server's /home/admin/.ssh/authorized_keys. SSH login uses the private key vmanage for authentication in a passless way. You can generate your own key pair through **ssh-keygen -t rsa -f .ssh/vmanage -C admin**
 1. **backupjob.log** is the log file of the backup job, which records the start and end time of the job, as well as the job running status.
 1. **./backupdata** is the directory for storing backup data.
 
