@@ -103,3 +103,7 @@ system
 (5) After the vManage Web interface is restored, log in to check whether the tenant, device whitelist, template, and policy have been restored.
 
 (6) Modify the vBond connection information, because after restoration, the vBond connection on vManage is connected through the 169.254.x.x address. You need to modify to vBond public network address. After reconnecting to vBond, the restoration of vManage is completed.
+
+## Acknowledgement
+
+My teamates **Micheal Tao Li**, and **Xing James Jiang** helped to build this daily backup script.
