@@ -5,11 +5,12 @@
 
 Currently (Oct. 2020), vManage doesn't have a daily backup function through GUI. If something went wrong with vMange, for example, the virtual machine of the vManage crashed, all the configuration data, including templates, device configurations, control policies, and data policies would be lost, and the SD-WAN network cannot be managed and new configuration changes can not be done.
 
-This Dailybackup script automatically executes Python scripts through Linux Crontab daily tasks, backs up the configuration database file of vManage, and copies the backup file to the server through SCP every day. This script can save the administrator's daily effort and automatically get the job done.
+This Dailybackup script automatically executes Python scripts through Linux Crontab daily tasks, backs up the configuration database file of vManage, and copies the backup file to the server through SCP every day. 
 
-So you can recover the configuration database to a newly installed vManage.
+The daily backup script provides an easy-to-use, low-cost, and easy-to-deploy automated data backup solution, which can effectively supplement the data backup function of vManage, helps customers to perform daily automatic backups, and eliminate the risk of data loss. You can easily recover the configuration database to a newly installed vManage.
 
 ## Components of the script
+
 1. **job.sh** A shell script, which starts the Python virtual environment, and executes the Python script.
 1. **dailaybackup.py** The Python script implements SSH login to vManage by calling the ***netmiko*** module, sends a data backup command, and runs scp to copy the file to the ./backupdata directory of the backup server.
 1. **vmanage and vmanage.pub** are a pair of RSA key pairs. Add vmanage.pub to vManage server's /home/admin/.ssh/authorized_keys. SSH login uses the private key vmanage for authentication in a passless way. You can generate your own key pair through **ssh-keygen -t rsa -f .ssh/vmanage -C admin**
