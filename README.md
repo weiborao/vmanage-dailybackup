@@ -1,9 +1,14 @@
 # vManage Dailybackup script
 
-Currently (Oct. 2020), vManage doesn't have a daily backup function through GUI.
-This Dailybackup script automatically executes Python scripts through Linux Crontab daily tasks, backs up the configuration database file of vManage, and copies the backup file to the server through SCP every day.
+## Summary of this script
 
-## Components of the scripts
+Currently (Oct. 2020), vManage doesn't have a daily backup function through GUI. If something went wrong with vMange, for example, the virtual machine of the vManage crashed, all the configuration data, including templates, device configurations, control policies, and data policies would be lost, and the SD-WAN network cannot be managed and new configuration changes can not be done.
+
+This Dailybackup script automatically executes Python scripts through Linux Crontab daily tasks, backs up the configuration database file of vManage, and copies the backup file to the server through SCP every day. This script can save the administrator's daily effort and automatically get the job done.
+
+So you can recover the configuration database to a newly installed vManage.
+
+## Components of the script
 1. **job.sh** A shell script, which starts the Python virtual environment, and executes the Python script.
 1. **dailaybackup.py** The Python script implements SSH login to vManage by calling the ***netmiko*** module, sends a data backup command, and runs scp to copy the file to the ./backupdata directory of the backup server.
 1. **vmanage and vmanage.pub** are a pair of RSA key pairs. Add vmanage.pub to vManage server's /home/admin/.ssh/authorized_keys. SSH login uses the private key vmanage for authentication in a passless way. You can generate your own key pair through **ssh-keygen -t rsa -f .ssh/vmanage -C admin**
@@ -82,6 +87,17 @@ Pay attention to check whether **job.sh** has executable permissions.
 
 (5) Copy **cleanzerofile.sh** to the /home/admin/ directory of vManage server, log in to vManage regularly for execution, and it will delete 0-byte files.
 
+## Demo Video
+
+Please find the demo videos here, each of them is the same.
+
+[vManage Daily Backup](./vManage Dailybackup.mp4)
+
+[YouTube: Cisco SDWAN vManage Configuration Database Daily backup script
+](https://www.youtube.com/watch?v=Qgn4eLaLh2Y)
+
+[Bilibili: Cisco vManage Dailybackup](https://www.bilibili.com/video/BV1Cz4y1o7Tq/)
+
 ## vMange recovery process
 (1) Simply configure vManage to make its Web Portal accessible.
 
@@ -106,4 +122,4 @@ system
 
 ## Acknowledgement
 
-My teamates **Micheal Tao Li**, and **Xing James Jiang** helped to build this daily backup script.
+My teamates **Michael Tao Li**, and **Xing James Jiang** helped to build this daily backup script.
