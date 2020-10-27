@@ -101,7 +101,7 @@ Please find the demo videos here, each of them is the same.
 [Bilibili: Cisco vManage Dailybackup](https://www.bilibili.com/video/BV1Cz4y1o7Tq/)
 
 ## vMange recovery process
-(1) Simply configure vManage to make its Web Portal accessible.
+(1) Simply configure vManage to make its Web Portal accessible, apply and install the certificate for it, because a newly installed vManage has a different UUID.
 
 (2) Restore the minimized configuration, for example:
 
