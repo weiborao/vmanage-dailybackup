@@ -102,7 +102,9 @@ class SSHjob:
             "touch "
             + zerofile
             + " && "
-            + "scp -i vmanage "
+            + "scp -i "
+            + keyfile
+            + " "
             + zerofile
             + " admin@"
             + login_info["host"]

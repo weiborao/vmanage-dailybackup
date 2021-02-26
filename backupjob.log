@@ -1,1 +1,22 @@
-#Job log file.
+#Job log file.===============Day of 2020-10-27===============
+2020-10-27 10:38:22.275853 Job started...
+Starting backup of configuration-db
+Failed to create file '/home/admin/confdb_backup2020-10-27.tar.gz'.  File already exists!
+CompletedProcess(args='scp -i vmanage admin@10.75.58.50:/home/admin/confdb_backup2020-10-27.tar.gz ./backupdata', returncode=0, stdout='', stderr='viptela 20.1.1 \n\n')
+CompletedProcess(args='touch /tmp/confdb_backup2020-10-20.tar.gz && scp -i vmanage /tmp/confdb_backup2020-10-20.tar.gz admin@10.75.58.50:/home/admin/ && rm /tmp/confdb_backup2020-10-20.tar.gz', returncode=0, stdout='', stderr='viptela 20.1.1 \n\n')
+2020-10-27 10:38:36.745006 Job ended...
+===============Day of 2020-10-27===============
+2020-10-27 10:39:34.178528 Job started...
+
+Starting backup of configuration-db
+Failed to create file '/home/admin/confdb_backup2020-10-27.tar.gz'.  File already exists!
+CompletedProcess(args='scp -i vmanage admin@10.75.58.50:/home/admin/confdb_backup2020-10-27.tar.gz ./backupdata', returncode=0, stdout='', stderr='viptela 20.1.1 \n\n')
+CompletedProcess(args='touch /tmp/confdb_backup2020-10-20.tar.gz && scp -i vmanage /tmp/confdb_backup2020-10-20.tar.gz admin@10.75.58.50:/home/admin/ && rm /tmp/confdb_backup2020-10-20.tar.gz', returncode=0, stdout='', stderr='viptela 20.1.1 \n\n')
+2020-10-27 10:39:48.670218 Job ended...
+===============Day of 2020-10-27===============
+2020-10-27 10:40:46.397713 Job started...
+Starting backup of configuration-db
+Failed to create file '/home/admin/confdb_backup2020-10-27.tar.gz'.  File already exists!
+CompletedProcess(args='scp -i vmanage admin@10.75.58.50:/home/admin/confdb_backup2020-10-27.tar.gz ./backupdata', returncode=0, stdout='', stderr='viptela 20.1.1 \n\n')
+CompletedProcess(args='touch /tmp/confdb_backup2020-10-20.tar.gz && scp -i vmanage /tmp/confdb_backup2020-10-20.tar.gz admin@10.75.58.50:/home/admin/ && rm /tmp/confdb_backup2020-10-20.tar.gz', returncode=0, stdout='', stderr='viptela 20.1.1 \n\n')
+2020-10-27 10:41:00.760804 Job ended...
