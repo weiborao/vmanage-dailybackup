@@ -13,8 +13,8 @@ backup_path = "./backupdata"
 
 login_info = {
     "device_type": "linux",
-    "host": "10.75.58.50",
-    "username": "admin",
+    "host": "10.74.84.31",
+    "username": "ciscosdwan",
     "use_keys": True,
     "key_file": keyfile,
 }
@@ -67,10 +67,10 @@ class SSHjob:
     def run_backup(self):
         backup_cmd = (
             "request nms configuration-db backup path \
-                 /home/admin/confdb_backup"
+                 /home/ciscosdwan/confdb_backup"
             + date
         )
-        self.backup_ret = self.net_connect.send_command(backup_cmd)
+        self.backup_ret = self.net_connect.send_command(command_string=backup_cmd,expect_string=r'Successfully',read_timeout=120)
 
     def copy_backup_file(self):
         runcmd = (
@@ -81,7 +81,9 @@ class SSHjob:
             + "@"
             + login_info["host"]
             + ":"
-            + "/home/admin/confdb_backup"
+            + "/home/"
+            + login_info["username"]
+            + "/confdb_backup"
             + date
             + ".tar.gz "
             + backup_path
@@ -93,7 +95,7 @@ class SSHjob:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 encoding="utf-8",
-                timeout=5,
+                timeout=600,
             )
         )
 
@@ -106,9 +108,11 @@ class SSHjob:
             + keyfile
             + " "
             + zerofile
-            + " admin@"
+            + login_info["username"]
             + login_info["host"]
-            + ":/home/admin/"
+            + ":/home/"
+            + login_info["username"]
+            + "/"
             + " && "
             + "rm "
             + zerofile
@@ -120,7 +124,7 @@ class SSHjob:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 encoding="utf-8",
-                timeout=5,
+                timeout=600,
             )
         )
 
