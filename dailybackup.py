@@ -67,7 +67,9 @@ class SSHjob:
     def run_backup(self):
         backup_cmd = (
             "request nms configuration-db backup path \
-                 /home/ciscosdwan/confdb_backup"
+                 /home/"
+            + login_info["username"]
+            + "/confdb_backup"
             + date
         )
         self.backup_ret = self.net_connect.send_command(command_string=backup_cmd,expect_string=r'Successfully',read_timeout=120)
