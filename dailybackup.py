@@ -110,7 +110,9 @@ class SSHjob:
             + keyfile
             + " "
             + zerofile
+            + " "
             + login_info["username"]
+            + "@"
             + login_info["host"]
             + ":/home/"
             + login_info["username"]
