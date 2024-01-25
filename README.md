@@ -95,11 +95,14 @@ Here I provide a Dockerfile for quick environment setup.
 
 You can copy the Dockerfile to your work directory, and run the commands as follows:
 
+```shell
 ❯ cd docker
 ❯ docker build . -t ubuntu-python3
+```
 
 You can list the images after the build completed.
 
+```shell
 ❯ docker images
 
 ❯ docker run -it ubuntu-python3
@@ -121,9 +124,11 @@ root@af441dac641f:~/vmanage-dailybackup# source venv/bin/activate
 (venv) root@af441dac641f:~/vmanage-dailybackup# ssh -i vmanage ciscosdwan@10.74.84.31
 viptela 20.12.1
 vManage1# exit
+```
 
 After you change the login_info to your onw vManage and Username, you can run the backup script.
 
+```shell
 root@af441dac641f:~/vmanage-dailybackup# ./job.sh
 Start to backup database.
 Connnected to vManage 10.74.84.31
@@ -164,6 +169,7 @@ drwxr-xr-x 17 root       root     4096 Jan 23 20:23 ..
 drwx------  2 ciscosdwan users    4096 Jan 23 20:23 .ssh
 -rwxrwxr-x  1 vmanage    admin 2046524 Jan 23 22:32 backupdata.tar.gz
 -rwxrwxr-x  1 vmanage    admin 2044339 Jan 25 21:43 confdb_backup2024-01-25.tar.gz
+```
 
 ## Demo Video
 
