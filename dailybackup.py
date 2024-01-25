@@ -72,6 +72,7 @@ class SSHjob:
             + "/confdb_backup"
             + date
         )
+        print(backup_cmd)
         self.backup_ret = self.net_connect.send_command(command_string=backup_cmd,expect_string=r'Successfully',read_timeout=120)
 
     def copy_backup_file(self):
@@ -90,6 +91,7 @@ class SSHjob:
             + ".tar.gz "
             + backup_path
         )
+        print(runcmd)
         self.ret1 = str(
             subprocess.run(
                 runcmd,
@@ -121,6 +123,7 @@ class SSHjob:
             + "rm "
             + zerofile
         )
+        print(runcmd)
         self.ret2 = str(
             subprocess.run(
                 runcmd,
@@ -140,10 +143,15 @@ def main():
     jobstart = str(DT.datetime.now())
     backup_job = SSHjob()
     backup_job.connect()
+    print("Connnected to vManage " + login_info["host"])
     backup_job.run_backup()
+    print("Backup config DB finished.")
     backup_job.copy_backup_file()
+    print("Backup DB file copied to the server.")
     backup_job.copy_zero_file()
+    print("Zero size file copied.")
     backup_job.disconnect()
+    print("Disconnected..\n Done.")
     jobend = str(DT.datetime.now())
 
     logdata = (
