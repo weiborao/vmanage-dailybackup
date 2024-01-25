@@ -89,6 +89,82 @@ Pay attention to check whether **job.sh** has executable permissions.
 
 (5) Copy **cleanzerofile.sh** to the /home/admin/ directory of vManage server, log in to vManage regularly for execution, and it will delete 0-byte files.
 
+## Run the script in a docker for quick test.
+
+Here I provide a Dockerfile for quick environment setup.
+
+You can copy the Dockerfile to your work directory, and run the commands as follows:
+
+❯ cd docker
+❯ docker build . -t ubuntu-python3
+
+You can list the images after the build completed.
+
+❯ docker images
+
+❯ docker run -it ubuntu-python3
+root@af441dac641f:~# git clone https://github.com/weiborao/vmanage-dailybackup.git
+Cloning into 'vmanage-dailybackup'...
+remote: Enumerating objects: 122, done.
+remote: Counting objects: 100% (122/122), done.
+remote: Compressing objects: 100% (88/88), done.
+remote: Total 122 (delta 66), reused 81 (delta 30), pack-reused 0
+Receiving objects: 100% (122/122), 1.38 MiB | 1.25 MiB/s, done.
+Resolving deltas: 100% (66/66), done.
+root@af441dac641f:~# cd vmanage-dailybackup/
+root@af441dac641f:~/vmanage-dailybackup# python3 -m venv venv
+root@af441dac641f:~/vmanage-dailybackup# source venv/bin/activate
+(venv) root@af441dac641f:~/vmanage-dailybackup# pip3 install netmiko
+
+(venv) root@af441dac641f:~/vmanage-dailybackup# ssh-keygen -t rsa -f vmanage -C ciscosdwan
+(venv) root@af441dac641f:~/vmanage-dailybackup# scp vmanage.pub ciscosdwan@10.74.84.31:/home/ciscosdwan/.ssh/authorized_keys
+(venv) root@af441dac641f:~/vmanage-dailybackup# ssh -i vmanage ciscosdwan@10.74.84.31
+viptela 20.12.1
+vManage1# exit
+
+After you change the login_info to your onw vManage and Username, you can run the backup script.
+
+root@af441dac641f:~/vmanage-dailybackup# ./job.sh
+Start to backup database.
+Connnected to vManage 10.74.84.31
+request nms configuration-db backup path /home/ciscosdwan/confdb_backup2024-01-25
+Backup config DB finished.
+scp -i vmanage ciscosdwan@10.74.84.31:/home/ciscosdwan/confdb_backup2024-01-25.tar.gz ./backupdata
+Backup DB file copied to the server.
+touch /tmp/confdb_backup2024-01-18.tar.gz && scp -i vmanage /tmp/confdb_backup2024-01-18.tar.gz ciscosdwan@10.74.84.31:/home/ciscosdwan/ && rm /tmp/confdb_backup2024-01-18.tar.gz
+Zero size file copied.
+enter vshell..
+rm confdb_backup2024-01-18.tar.gz -f
+Zero size file deleted.
+Disconnected..
+ Done.
+End of the job.
+root@af441dac641f:~/vmanage-dailybackup# ls -al ./backupdata
+total 2008
+drwxr-xr-x 2 root root    4096 Jan 25 13:43 .
+drwxr-xr-x 5 root root    4096 Jan 25 13:38 ..
+-rwxr-xr-x 1 root root       0 Jan 25 13:38 confdb_backup.tar.gz
+-rwxr-xr-x 1 root root 2044339 Jan 25 13:43 confdb_backup2024-01-25.tar.gz
+
+root@af441dac641f:~/vmanage-dailybackup# ssh -i vmanage ciscosdwan@10.74.84.31
+viptela 20.12.1
+
+Last login: Thu Jan 25 21:43:40 CST 2024 from 10.141.77.173 on ssh
+Welcome to Viptela CLI
+User ciscosdwan last logged in 2024-01-25T13:42:39.86983+00:00, to vManage1, from 10.141.77.173 using cli-ssh
+ciscosdwan connected from 10.141.77.173 using ssh on vManage1
+vManage1# vshell
+vManage1:~$ ls -al
+total 6028
+drwxr-x---  3 ciscosdwan users    4096 Jan 25 21:43 .
+drwxr-xr-x 17 root       root     4096 Jan 23 20:23 ..
+-rw-------  1 ciscosdwan users     504 Jan 25 21:43 .bash_history
+-rwxr-xr-x  1 ciscosdwan users     411 Jan 23 20:23 .bashrc
+-rwxr-xr-x  1 ciscosdwan users     241 Aug  9 14:45 .profile
+drwx------  2 ciscosdwan users    4096 Jan 23 20:23 .ssh
+-rwxrwxr-x  1 vmanage    admin 2046524 Jan 23 22:32 backupdata.tar.gz
+-rwxrwxr-x  1 vmanage    admin 2044339 Jan 25 21:43 confdb_backup2024-01-25.tar.gz
+
 ## Demo Video
 
 Please find the demo videos here, each of them is the same.
