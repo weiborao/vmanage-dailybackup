@@ -129,6 +129,8 @@ vManage1# exit
 After you change the login_info to your onw vManage and Username, you can run the backup script.
 
 ```shell
+(venv) root@af441dac641f:~/vmanage-dailybackup# deactivate
+root@af441dac641f:~/vmanage-dailybackup#
 root@af441dac641f:~/vmanage-dailybackup# ./job.sh
 Start to backup database.
 Connnected to vManage 10.74.84.31
