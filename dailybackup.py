@@ -66,14 +66,13 @@ class SSHjob:
 
     def run_backup(self):
         backup_cmd = (
-            "request nms configuration-db backup path \
-                 /home/"
+            "request nms configuration-db backup path /home/" \
             + login_info["username"]
             + "/confdb_backup"
             + date
         )
         print(backup_cmd)
-        self.backup_ret = self.net_connect.send_command(command_string=backup_cmd,expect_string=r'Successfully',read_timeout=120)
+        self.backup_ret = self.net_connect.send_command(command_string=backup_cmd,expect_string=r'Successfully',read_timeout=300)
 
     def copy_backup_file(self):
         runcmd = (
@@ -99,7 +98,7 @@ class SSHjob:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 encoding="utf-8",
-                timeout=600,
+                timeout=300,
             )
         )
 
@@ -131,9 +130,15 @@ class SSHjob:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 encoding="utf-8",
-                timeout=600,
+                timeout=60,
             )
         )
+
+    def rm_zerofile(self):
+        runcmd = ("rm confdb_backup" + week_ago + ".tar.gz -f")
+        self.backup_ret = self.net_connect.send_command(command_string="vshell",expect_string=r'$',read_timeout=5)
+        self.backup_ret = self.net_connect.send_command(command_string=runcmd,read_timeout=5)
+        print("enter vshell..\n"+runcmd)
 
     def disconnect(self):
         self.net_connect.disconnect()
@@ -150,6 +155,8 @@ def main():
     print("Backup DB file copied to the server.")
     backup_job.copy_zero_file()
     print("Zero size file copied.")
+    backup_job.rm_zerofile()
+    print("Zero size file deleted.")
     backup_job.disconnect()
     print("Disconnected..\n Done.")
     jobend = str(DT.datetime.now())
